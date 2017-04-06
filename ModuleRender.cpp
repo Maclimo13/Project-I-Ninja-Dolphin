@@ -49,6 +49,17 @@ update_status ModuleRender::PostUpdate()
 	return update_status::UPDATE_CONTINUE;
 }
 
+update_status ModuleRender::Update() {
+	for (int i = 0; i < MAX_REQUEST; ++i) {
+		if (requests[i] == nullptr)
+			continue;
+		if (SDL_RenderCopy(renderer, requests[i]->texture, requests[i]->section, &requests[i]->rect) != 0) {
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+		}
+	}
+	return UPDATE_CONTINUE;
+}
+
 // Called before quitting
 bool ModuleRender::CleanUp()
 {
@@ -62,7 +73,7 @@ bool ModuleRender::CleanUp()
 }
 
 // Blit to screen
-bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, int size, SDL_Rect* section)
+bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, int layer , int size, SDL_Rect* section)
 {
 	bool ret = true;
 	SDL_Rect rect;
@@ -81,12 +92,6 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, int size, SDL_Rect* 
 
 	rect.w *= size;
 	rect.h *= size;
-
-	if(SDL_RenderCopy(renderer, texture, section, &rect) != 0)
-	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		ret = false;
-	}
 
 	return ret;
 }
