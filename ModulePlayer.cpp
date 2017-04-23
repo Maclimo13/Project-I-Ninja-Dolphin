@@ -46,7 +46,7 @@ update_status ModulePlayer::Update() {
 	sdl_clock = SDL_GetTicks();
 	switch (state) {
 	case IDLE:
-		App->render->Blit(player, player_x, player_y, 1, &player_sprite);
+		App->render->Blit(player, player_x, player_y, 4, 1, &player_sprite);
 		if (App->input->keyboard[SDL_SCANCODE_LEFT] == KEY_REPEAT && !(App->input->keyboard[SDL_SCANCODE_RIGHT] == KEY_REPEAT))
 			state = LEFT;
 		if (App->input->keyboard[SDL_SCANCODE_RIGHT] == KEY_REPEAT && !(App->input->keyboard[SDL_SCANCODE_LEFT] == KEY_REPEAT))
@@ -58,7 +58,7 @@ update_status ModulePlayer::Update() {
 		break;
 
 	case LEFT:
-		App->render->Blit(player, player_x, player_y, 1, &player_sprite_left);
+		App->render->Blit(player, player_x, player_y, 4, 1, &player_sprite_left);
 
 		if (player_x > 0)
 			player_x -= PLAYER_SPEED;
@@ -74,7 +74,7 @@ update_status ModulePlayer::Update() {
 		break;
 
 	case RIGHT:
-		App->render->Blit(player, player_x, player_y, 1, &player_sprite_right);
+		App->render->Blit(player, player_x, player_y, 4, 1, &player_sprite_right);
 
 		if (player_x < SCREEN_WIDTH - SPRITE_WIDTH)
 			player_x += PLAYER_SPEED;
@@ -90,7 +90,7 @@ update_status ModulePlayer::Update() {
 		break;
 
 	case FORWARD:
-		App->render->Blit(player, player_x, player_y, 1, &player_sprite);
+		App->render->Blit(player, player_x, player_y, 4, 1, &player_sprite);
 		if (player_y > 0)
 			player_y -= PLAYER_SPEED;
 
@@ -103,7 +103,7 @@ update_status ModulePlayer::Update() {
 		break;
 
 	case STOP:
-		App->render->Blit(player, player_x, player_y, 1, &player_sprite);
+		App->render->Blit(player, player_x, player_y, 4, 1, &player_sprite);
 
 		if (player_y < SCREEN_HEIGHT - SPRITE_HEIGHT)
 			player_y += PLAYER_SPEED;

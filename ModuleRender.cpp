@@ -32,6 +32,9 @@ bool ModuleRender::Init()
 		ret = false;
 	}
 
+	for (int i = 0; i < MAX_REQUESTS; ++i)
+		requests[i] = nullptr;
+
 	return ret;
 }
 
@@ -50,12 +53,12 @@ update_status ModuleRender::PostUpdate()
 }
 
 update_status ModuleRender::Update() {
-	for (int i = 0; i < MAX_REQUEST; ++i) {
-		if (requests[i] == nullptr)
-			continue;
-		if (SDL_RenderCopy(renderer, requests[i]->texture, requests[i]->section, &requests[i]->rect) != 0) {
+	for (int i = 0; i < MAX_REQUESTS && requests[i] != nullptr; ++i) {
+		if (SDL_RenderCopy(renderer, requests[i]->texture, &requests[i]->section, &requests[i]->rect) != 0) {
 			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		}
+		//delete requests[i];
+		requests[i] = nullptr;
 	}
 	return UPDATE_CONTINUE;
 }
@@ -92,6 +95,36 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, int layer , int size
 
 	rect.w *= size;
 	rect.h *= size;
+
+	Blit_Request* n_request = new Blit_Request(texture,rect,layer,*section);
+	//n_request->texture = texture;
+	//n_request->rect = rect;
+	//n_request->priority = layer;
+	//n_request->section.x = section->x;
+	//n_request->section.y = section->y;
+	//n_request->section.w = section->w;
+	//n_request->section.h = section->h;
+	if (requests[MAX_REQUESTS - 1] != nullptr) {
+		ret = false;
+		LOG("Blit requests overflow, cannot Blit.");
+	}
+	else {
+		for (int i = MAX_REQUESTS - 2; i >= 0; --i) {
+			if (requests[i] == nullptr && i != 0)
+				continue;
+			else if (i == 0)
+				requests[i] = n_request;
+			if (requests[i]->priority > layer) {
+				requests[i + 1] = requests[i];
+				requests[i] = nullptr;
+			}
+			else {
+				requests[i + 1] = n_request;
+				break;
+			}
+
+		}
+	}
 
 	return ret;
 }

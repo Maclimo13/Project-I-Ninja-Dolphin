@@ -65,6 +65,9 @@
     <ClInclude Include="ModuleTransition.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="pQueue.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
